@@ -133,8 +133,10 @@ function calculateRuneExpToLevel(runeIndex) {
 
 	// Rune exp required to level multipliers
 	let allRuneExpRequiredMultiplier = productContents([
-			Math.pow(runelevel, 3),
-			((4 * runelevel) + 100) / 500,
+            5 * Math.pow(runelevel, 3) + 50 * Math.pow(runelevel, 2),
+            1 + runelevel/5,
+            Math.min(15, Math.max(1, (runelevel - 15)/5)),
+            Math.min(20, Math.max(1, (runelevel - 25)/5)),
 			Math.max(1, (runelevel - 500)/25),
 			Math.max(1, (runelevel - 600)/30),
 			Math.max(1, (runelevel - 700)/25),
@@ -152,17 +154,19 @@ function calculateRuneExpToLevel(runeIndex) {
 
 function calculateObtainium(){
     obtainiumGain = 1;
+    var transcendPoints = player.transcendPoints.add(transcendPointGain).add(1)
+        obtainiumGain *= Decimal.pow(.75 + transcendPoints.log(10) / 300, 2)  
         if (player.upgrades[69] > 0) {
-            obtainiumGain *= Math.min(10, Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5))
+            obtainiumGain *= Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5)
         }
         if (player.upgrades[70] > 0) {
-            obtainiumGain *= Math.pow(Math.min(19 + 0.6 * player.shopUpgrades.obtainiumTimerLevel, 1 + 2 * player.reincarnationcounter / 400),2)
+            obtainiumGain *= Math.pow(Math.min(19 + 0.6 * player.shopUpgrades.obtainiumTimerLevel, 1 + player.reincarnationcounter / 200),2)
         }
         if (player.upgrades[72] > 0) {
-            obtainiumGain *= Math.min(50, (1 + 2 * player.challengecompletions.six + 2 * player.challengecompletions.seven + 2 * player.challengecompletions.eight + 2 * player.challengecompletions.nine + 2 * player.challengecompletions.ten))
+            obtainiumGain *= (1 + .1 * (player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight + player.challengecompletions.nine + player.challengecompletions.ten))
         }
         if (player.upgrades[74] > 0) {
-            obtainiumGain *= (1 + 4 * Math.min(1, Math.pow(player.maxofferings / 100000, 0.5)))
+            obtainiumGain *= (1 + 4 * Math.min(1, Math.pow(player.maxofferings / 1000000000, 0.5)))
         }
         obtainiumGain *= (1 + player.researches[65]/50)
         obtainiumGain *= (1 + player.researches[76]/50)
@@ -181,7 +185,7 @@ function calculateObtainium(){
         if (player.achievements[51] > 0){obtainiumGain += 4}
         if (player.reincarnationcounter >= 30){obtainiumGain += 1 * player.researches[63]}
         if (player.reincarnationcounter >= 60){obtainiumGain += 2 * player.researches[64]}
-        obtainiumGain *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2));
+        obtainiumGain *= Math.min(1, Math.pow(player.reincarnationcounter/5, 2))
 
         player.obtainiumpersecond = obtainiumGain/(Math.min(player.reincarnationcounter, 3600 + 120 * player.shopUpgrades.obtainiumTimerLevel) + 1)
         player.maxobtainiumpersecond = Math.max(player.maxobtainiumpersecond, player.obtainiumpersecond);
@@ -426,4 +430,8 @@ calculateRuneLevels();
 
 function calculateSigmoid(constant, factor, divisor) {
 return (1 + (constant - 1) * (1 - Math.pow(2, -(factor)/(divisor))));
+}
+
+function calculateChallengeRequirements(ch){
+    return Decimal.pow(10, challengebaserequirements[ch] * Math.pow(1 + player.challengecompletions[ch], (2 + Math.max(0, (player.challengecompletions[ch] / 25) - 1))))
 }

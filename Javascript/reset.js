@@ -31,7 +31,8 @@ function resetdetails(i) {
         if (player.researches[95] == 1){
             a += 40
         }
-        a *= Math.pow(player.reincarnationcounter / 600 * Math.pow(Math.min(optimalOfferingTimer/400, player.reincarnationcounter / 400), 1), 0.7)
+        a *= Math.pow(Math.log10(1 + player.transcendPoints.add(1).log10()), 3)
+        //a *= Math.pow(player.reincarnationcounter / 600 * Math.pow(Math.min(optimalOfferingTimer/400, player.reincarnationcounter / 400), 1), 0.7)
 
     }
     if (i >= 2 && i !== 5) {
@@ -43,14 +44,13 @@ function resetdetails(i) {
             b += (15 * Math.min(player.transcendcounter/1800, 1))
         }
         b += 1 * player.researches[24]
-        b *= Math.pow(player.transcendcounter / 540 * Math.pow(Math.min(optimalOfferingTimer/480, player.transcendcounter / 480), 1), 0.6)
+        b *= Math.pow(Math.log10(1 + player.prestigePoints.add(1).log10()), 2)
+        //b *= Math.pow(player.transcendcounter / 540 * Math.pow(Math.min(optimalOfferingTimer/480, player.transcendcounter / 480), 1), 0.6)
 
     }
     if (i >= 1) {
         c += 1
-        if (player.transcendCount > 0 || player.reincarnationCount > 0) {
-            c += 2
-        }
+        c += Math.min(2, player.transcendCount * .2)
         if (player.reincarnationCount > 0) {
             c += 2
         }
@@ -58,7 +58,9 @@ function resetdetails(i) {
             c += (15 * Math.min(player.prestigecounter/1800, 1))
         }
         c += 1 * player.researches[24]
-        c *= Math.pow(player.prestigecounter / 480 * Math.pow(Math.min(optimalOfferingTimer/600, player.prestigecounter / 600), 1), 0.5)
+        c *= Math.pow(Math.log10(player.coins.log10() - .25), 2)
+        c /= 4
+        //c *= Math.pow(player.prestigecounter / 480 * Math.pow(Math.min(optimalOfferingTimer/600, player.prestigecounter / 600), 1), 0.5)
     }
     q = a + b + c + d
     
@@ -74,7 +76,7 @@ function resetdetails(i) {
     }
     if (player.upgrades[38] == 1){q *= 1.2}
     if (player.upgrades[75] > 0.5) {
-        q *= (1 + 2 * Math.min(1, Math.pow(player.maxobtainium / 30000000, 0.5)))
+        q *= (1 + 2 * Math.min(1, Math.pow(player.maxobtainium/100000000000, 0.5)))
     }
     q *= (1 + 1/50 * player.shopUpgrades.offeringAutoLevel);
     q *= (1 + 1/100 * player.shopUpgrades.cashGrabLevel);
@@ -139,12 +141,12 @@ function resetdetails(i) {
         document.getElementById("resetcurrency2").textContent = ""
         document.getElementById("resetobtainium2").textContent = ""
         if (player.currentChallenge !== "") {
-            if (player.coinsThisTranscension.greaterThanOrEqualTo(Decimal.pow(10, challengebaserequirements[s] * Math.pow(1 + player.challengecompletions[s], 2) * Math.pow(1.5, Math.max(0, player.challengecompletions[s] - 75))))) {
+            if (player.coinsThisTranscension.greaterThanOrEqualTo(calculateChallengeRequirements(s))) {
                 document.getElementById("resetinfo").style.color = "limegreen"
             } else {
                 document.getElementById("resetinfo").style.color = "crimson"
             }
-            document.getElementById("resetinfo").textContent = "Are you tired of being in your challenge or stuck? Click to leave challenge " + r + ". Progress: " + format(player.coinsThisTranscension) + "/" + format(Decimal.pow(10, challengebaserequirements[s] * Math.pow(1 + player.challengecompletions[s], 2) * Math.pow(1.5, Math.max(0,player.challengecompletions[s]-75)))) + " Coins. TIME SPENT: " + format(player.transcendcounter) + " seconds."
+            document.getElementById("resetinfo").textContent = "Are you tired of being in your challenge or stuck? Click to leave challenge " + r + ". Progress: " + format(player.coinsThisTranscension) + "/" + format(calculateChallengeRequirements(s)) + " Coins. TIME SPENT: " + format(player.transcendcounter) + " seconds."
         }
         if (player.currentChallenge == "") {
             document.getElementById("resetinfo").textContent = "You're not in a challenge right now. Get in one before you can leave it, duh!"

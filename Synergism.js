@@ -1557,7 +1557,8 @@ function resourceGain(dt,fast){
 		if (player.upgrades[93] == 1 && player.coinsThisPrestige.greaterThanOrEqualTo(1e16)) {
 			player.prestigePoints = player.prestigePoints.add(Decimal.floor(prestigePointGain.dividedBy(4000).times(dt/0.025)))
 		}
-		if (player.upgrades[100] == 1 && player.coinsThisTranscension.greaterThanOrEqualTo(1e100)) {
+		if (player.upgrades[100] == 1 && player.coinsThisTranscension.greaterThanOrEqualTo(1e100)
+			&& !["one", "two", "three", "four", "five"].includes(player.currentChallenge)) {
 			player.transcendPoints = player.transcendPoints.add(Decimal.floor(transcendPointGain.dividedBy(4000).times(dt/0.025)))
 		}
 
@@ -1756,7 +1757,7 @@ function resetCheck(i,manual) {
 			if (q == "five") {x = 70} 
 		if (player.currentChallenge !== "") {
 
-			if (player.coinsThisTranscension.greaterThanOrEqualTo(Decimal.pow(10, challengebaserequirements[q] * Math.pow(1 + player.challengecompletions[q], 2) * Math.pow(1.5, Math.max(0, player.challengecompletions[q] - 75)))) && player.challengecompletions[q] < (25 + player.researches[x] + 925 * player.researches[105])) {
+			if (player.coinsThisTranscension.greaterThanOrEqualTo(calculateChallengeRequirements(q)) && player.challengecompletions[q] < (25 + player.researches[x] + 925 * player.researches[105])) {
 			player.challengecompletions[q] += 1;
 			var y = x - 65
 			challengeDisplay(y,true)
@@ -1966,7 +1967,7 @@ function updateAll() {
 		var chal = player.currentChallenge;
 		var reinchal = player.currentChallengeRein;
 		if (chal !== ""){
-		if (player.coinsThisTranscension.greaterThanOrEqualTo(Decimal.pow(10, challengebaserequirements[chal] * Math.pow(1 + player.challengecompletions[chal], 2) * Math.pow(1.5, Math.max(0, player.challengecompletions[chal] - 75))))){
+		if (player.coinsThisTranscension.greaterThanOrEqualTo(calculateChallengeRequirements(chal))){
 			resetCheck('challenge',false);
 		}
 		}

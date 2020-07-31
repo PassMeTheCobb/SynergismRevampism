@@ -69,10 +69,10 @@ var upgdesc68 = "Gain a free multiplier for every 1e1000x increase in tax."
 var upgdesc69 = "Gain more Obtainium based on your particle gain. [Works with automation at a reduced rate!]"
 var upgdesc70 = "Gain more Obtainium from Reincarnations based on how long your current reincarnation is."
 var upgdesc71 = "Runes will gain (Rune Level) additional EXP per offering used."
-var upgdesc72 = "Obtainium gain from Reincarnations is multiplied (1 + 2C) where C is #Reincarnation Challenges completed, up to 50x!"
+var upgdesc72 = "Obtainium gain from Reincarnations is multiplied (1 + .1C) where C is #Reincarnation Challenges completed"
 var upgdesc73 = "Gain +100% free accelerator boosts and +10 free Crystal Upgrade levels, but only in Reincarnation Challenges."
-var upgdesc74 = "Obtainium gain is increased based on highest ever unspent offerings. [Max: 100,000 unspent]"
-var upgdesc75 = "Offering gain is increased based on highest ever unspent obtainium [Max: 30,000,000 obtainium]"
+var upgdesc74 = "Obtainium gain is increased based on highest ever unspent offerings. [Max: 1,000,000,000 unspent]"
+var upgdesc75 = "Offering gain is increased based on highest ever unspent obtainium [Max: 100,000,000,000 obtainium]"
 var upgdesc76 = "Ant generation kinda slow? I agree! Make all ant tiers 5x faster!"
 var upgdesc77 = "This is Synergism, right? Let's make each purchased ant make all ants 0.5% faster."
 var upgdesc78 = "Hate spam clicking? Autosacrifice AND Manual spending spends 1,000x more offerings at a time."
@@ -198,12 +198,12 @@ function() { return "It's quite clear in the description!"},
 function() { return "The first particle-tier producer is " + format(Decimal.pow(1.03, player.firstOwnedParticles + player.secondOwnedParticles + player.thirdOwnedParticles + player.fourthOwnedParticles + player.fifthOwnedParticles),2) + "x as productive."},
 function() { return "Your compliance with tax laws provides you with " + format(Math.min(2500, Math.floor(1/1000 * Decimal.log(taxdivisor,10)))) + " free Multipliers, for some reason."},
 function() { return "Cosmic Magnetics will allow you to gain " + format(Math.min(10, Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5)),2) + "x as much Obtainium reincarnating, x" + format(Math.min(3,Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5)),2) + " automation gain."},
-function() { return "Your patience will allow you to gain " + format(Math.min(4, Math.max(1, Math.pow(player.reincarnationcounter/30,2))) * Math.pow(Math.min(19 + player.shopUpgrades.obtainiumTimerLevel * 0.6, 1 + player.reincarnationcounter / 200),2),2) + "x more Obtainium on Reincarnation."},
+function() { return "Your patience will allow you to gain " + format(Math.pow(Math.min(19 + 0.6 * player.shopUpgrades.obtainiumTimerLevel, 1 + player.reincarnationcounter / 200),2),2) + "x more Obtainium on Reincarnation."},
 function() { return "Writing's on the wall. Look above!"},
-function() { return "Obtainium multiplier: x" + Math.min(50, (1 + 2 * player.challengecompletions.six + 2 * player.challengecompletions.seven + 2 * player.challengecompletions.eight + 2 * player.challengecompletions.nine + 2 * player.challengecompletions.ten))},
+function() { return "Obtainium multiplier: x" + format(1 + .1 * (player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight + player.challengecompletions.nine + player.challengecompletions.ten), 2)},
 function() { return "Same as Transcend upgrade 10, except you MUST be in a Reincarnation challenge in particular."},
-function() { return "Obtainium multiplier: x" + format((1 + 4 * Math.min(1, Math.pow(player.maxofferings / 100000, 0.5))),2)},
-function() { return "Offering Multiplier: x" + format((1 + 2 * Math.min(1, Math.pow(player.maxobtainium/30000000, 0.5))),2)},
+function() { return "Obtainium multiplier: x" + format(1 + 4 * Math.min(1, Math.pow(player.maxofferings/1000000000, 0.5)),2)},
+function() { return "Offering Multiplier: x" + format((1 + 2 * Math.min(1, Math.pow(player.maxobtainium/100000000000, 0.5))),2)},
 function() { return "Epic 5x Ants!"},
 function() { return "Ant Speed Multiplier: x" + format((Decimal.pow(1.005 + 5/100000 * player.researches[96], player.firstOwnedAnts + player.secondOwnedAnts + player.thirdOwnedAnts + player.fourthOwnedAnts + player.fifthOwnedAnts + player.sixthOwnedAnts + player.seventhOwnedAnts + player.eighthOwnedAnts)),3)},
 function() { return "Look above please lol"},

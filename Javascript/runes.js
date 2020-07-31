@@ -58,7 +58,8 @@
             if (player.researches[95] == 1){
                 a += 40
             }
-            a *= Math.pow(player.reincarnationcounter / 600 * Math.pow(Math.min(optimalOfferingTimer/400, player.reincarnationcounter / 400), 1), 0.7)
+            a *= Math.pow(Math.log10(1 + player.transcendPoints.add(1).log10()), 3)
+            //a *= Math.pow(player.reincarnationcounter / 600 * Math.pow(Math.min(optimalOfferingTimer/400, player.reincarnationcounter / 400), 1), 0.7)
     
         }
         if (i >= 2) {
@@ -66,22 +67,25 @@
             if (player.reincarnationCount > 0) {b += 7}
             if (player.achievements[44] > 0.5) {b += (15 * Math.min(1, player.transcendcounter/1800))}
             b += 1 * player.researches[24]
-            b *= Math.pow(player.transcendcounter/540 * Math.pow(Math.min(optimalOfferingTimer/480, player.transcendcounter/480), 1), 0.6)
+            b *= Math.pow(Math.log10(1 + player.prestigePoints.add(1).log10()), 2)
+            //b *= Math.pow(player.transcendcounter/540 * Math.pow(Math.min(optimalOfferingTimer/480, player.transcendcounter/480), 1), 0.6)
         }
         if (i >= 1) {
             c += 1
-            if (player.transcendCount > 0 || player.reincarnationCount > 0) {c += 2}
+            c += Math.min(2, player.transcendCount * .2)
             if (player.reincarnationCount > 0) {c += 2}
             if (player.achievements[37] > 0.5) {c += (15 * Math.min(1, player.prestigecounter/1800))}
             c += 1 * player.researches[24]
-            c *= Math.pow(player.prestigecounter/480 * Math.pow(Math.min(optimalOfferingTimer/600, player.prestigecounter/600), 1), 0.5)
+            //c *= Math.pow(player.prestigecounter/480 * Math.pow(Math.min(optimalOfferingTimer/600, player.prestigecounter/600), 1), 0.5)
+            c *= Math.pow(Math.log10(player.coins.log10() - .25), 2)
+            c /= 4
         }
         q = a + b + c
         if (player.achievements[33] > 0.5) {q *= 1.10}
         if (player.achievements[34] > 0.5) {q *= 1.15}
         if (player.achievements[35] > 0.5) {q *= 1.25}
         if (player.upgrades[38] == 1){q *= 1.20}
-        if (player.upgrades[75] > 0.5 && player.maxobtainium !== undefined) {q *= (1 + 2 * Math.min(1, Math.pow(player.maxobtainium/30000000, 0.5)))}
+        if (player.upgrades[75] > 0.5 && player.maxobtainium !== undefined) {q *= (1 + 2 * Math.min(1, Math.pow(player.maxobtainium/100000000000, 0.5)))}
         q *= (1 + 1/50 * player.shopUpgrades.offeringAutoLevel);
         q *= (1 + 1/100 * player.shopUpgrades.cashGrabLevel);
         q *= (1 + 4 * (1 - Math.pow(2, -(player.antUpgrades[6] + bonusant6)/125)))
@@ -126,7 +130,7 @@ function redeemShards(runeIndexPlusOne,auto,autoMult) {
 	let recycleMultiplier = calculateRecycleMultiplier();
 
 	// amount of offerings being spent, if offerings is less than amount set to be bought then set amount to current offerings
-    let amount = Math.min(player.runeshards, player.offeringbuyamount * (1 + 999 * player.upgrades[78]));
+    let amount = Math.min(player.runeshards, player.offeringbuyamount * 1000 * (1 + 999 * player.upgrades[78]));
     // if autobuyer is enabled then set the amount to the proper autobuyer amount based on the shop upgrade level, or current offerings if it's less than that
 	if (auto){amount = Math.min(player.runeshards, Math.pow(2, 1 + player.shopUpgrades.offeringAutoLevel) * autoMult)}
     if (player.runeshards >= 1 && player.runelevels[runeIndex] < (500 + increaseMaxLevel[runeIndex]) && unlockedRune[runeIndex]) {
